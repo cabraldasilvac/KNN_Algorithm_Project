@@ -1,0 +1,7 @@
+{
+  "name": "knn",
+  "version": "1.0.0",
+  "description": "Algoritmo knn(T,K,C,z)",
+  "main": "index.js",
+  "license": "MIT"
+}
