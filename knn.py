@@ -6,14 +6,19 @@ import random
 def read_dataset(file_path):
     # Função para ler o dataset a partir de um arquivo CSV
     dataset = []
-    with open(file_path) as file:
-        reader = csv.reader(file, delimiter=',')
-        for row in reader:
-            if row:
-                # Converter os valores para float e adicionar a classe
-                datapoint = [float(value) for value in row[:4]]
-                datapoint.append(row[4])  # Adicionando a classe
-                dataset.append(datapoint)
+    try:
+        with open(file_path) as file:
+            reader = csv.reader(file, delimiter=',')
+            for row in reader:
+                if row:
+                    # Converter os valores para float e adicionar a classe
+                    datapoint = [float(value) for value in row[:4]]
+                    datapoint.append(row[4])  # Adicionando a classe
+                    dataset.append(datapoint)
+    except FileNotFoundError:
+        print(f"Erro: Arquivo '{file_path}' não encontrado.")
+    except Exception as e:
+        print(f"Erro ao ler o arquivo CSV: {e}")
     return dataset
 
 
@@ -57,9 +62,18 @@ def main():
     start_time = time.time()
     file_path = "./iris/iris.data"
     dataset = read_dataset(file_path)
+    if not dataset:
+        print("Não foi possível carregar o dataset.")
+        return
+
     random.shuffle(dataset)
 
     test_percentage = 0.3
+    min_data_size = 5  # Tamanho mínimo de dados para garantir testes válidos
+    if len(dataset) < min_data_size:
+        print("Erro: Dataset muito pequeno para realizar os testes.")
+        return
+
     test_size = int(len(dataset) * test_percentage)
     data_test = dataset[:test_size]
     data_train = dataset[test_size:]
